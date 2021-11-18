@@ -2,8 +2,7 @@ from app import db
 
 class Users(db.Model):
     __tablename__ = 'users'
-    def __init__(self, id, user_id, pw_hash, name):
-        self.id = id
+    def __init__(self, user_id, pw_hash, name):
         self.user_id = user_id
         self.pw_hash = pw_hash
         self.name = name

@@ -22,9 +22,9 @@ def insertsql_from_json():
         for row in json_data:
             #published_at = datetime.strptime(
             #                row['publication_date'], '%Y-%m-%d').date()
-            image_path = f"static/img/{row['id']}"
+            image_path = f"img/{row['id']}"
             try:
-                open(f'./app/{image_path}.png')
+                open(f'./app/static/{image_path}.png')
                 image_path += '.png'
             except:
                 image_path += '.jpg'

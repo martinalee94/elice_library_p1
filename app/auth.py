@@ -29,7 +29,7 @@ def login():
         user = Users.query.filter(Users.user_id == user_id).first()
 
         if user is None:
-            return jsonify({'result':'fail'})
+            return jsonify({'result':'none user'})
         else:
             if bcrypt.check_password_hash(user.pw_hash, user_pw):
                 session['login'] = user.id

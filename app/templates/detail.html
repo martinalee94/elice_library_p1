@@ -3,7 +3,41 @@
 
 {% block content %}
 
-<img src="{{ book.image }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+<div class="container px-4 py-5" id="custom-cards">
+    <h2 class="pb-2 border-bottom">{{ book.book_name}}</h2>
+
+    <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+      <div class="col">
+        <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" alt="">
+        <!-- <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{ url_for('static', filename='{}'.format(book.image)) }}');">
+          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+            <ul class="d-flex list-unstyled mt-auto">
+
+              <li class="d-flex align-items-center me-3">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                <small>Earth</small>
+              </li>
+              <li class="d-flex align-items-center">
+                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
+                <small>3d</small>
+              </li>
+            </ul>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    
+    <div>
+        <div class="col">
+            <ul>
+                <li>{{book.author}} - {{book.publisher}}</li>
+                <li>{{book.publication_date}}</li>
+                <li>{{book.pages}}</li>
+                <li><a href="{{book.link}}">상세 페이지</a></li>
+            </ul>
+        </div>
+    </div>
 <p>책 설명: {{book.description}}</p>
 
+</div>
 {% endblock %}

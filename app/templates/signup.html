@@ -9,7 +9,7 @@ function signup(){
     name = $('name').val()
     alert(user_id + user_pw1 + user_pw2 + name)
     $.ajax({
-        url:'/signup',
+        url:'/user/signup',
         type:'post',
         data:{
             'user_id': user_id,
@@ -48,12 +48,12 @@ function signup(){
 {% block content %}
     <main>
         <h1>Get Started with your account.</h1>
-        <form action="" method='POST'>
+        <form action="/user/signup" method='POST'>
             <p>아이디 :</p> <input type="email" id="user_id" required />
             <p>비밀번호 :</p> <input type="password" id="user_pw1" required />
             <p>비밀번호 확인 :</p> <input type="password" id="user_pw2" required />
             <p>이름 :</p> <input type="text" id="name" required />
-            <button onClick="signup()">sign-up!</button>
+            <button type="button" onClick="signup()">sign-up!</button>
         </form>
         <p id="login_msg"></p>
     </main>

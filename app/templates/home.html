@@ -26,7 +26,7 @@
             {% for book in book_list%}
             <div class="col">
             <div class="card shadow-sm">
-                <img src="{{ book.image }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+                <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
                 <div class="card-body">
                 <p><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a> </p>
