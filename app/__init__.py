@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, redirect
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import config
@@ -20,11 +20,19 @@ def create_app():
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import books
+    app.register_blueprint(books.bp)
+
+    from . import detail
+    app.register_blueprint(detail.bp)
 
     @app.route('/')
-    def hello_pybo():
-        return 'Hello, Pybo!'
+    def welcome():
+        return redirect('/home')
 
     return app
 
 
+if __name__ == "__main__":
+    app = create_app()
+    app.run('0.0.0.0', 5000, debug=True)

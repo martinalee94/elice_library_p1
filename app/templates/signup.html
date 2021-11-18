@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+<script>
+function signup(){
+    user_id = $('#user_id').val()
+    user_pw1 = $('#user_pw1').val()
+    user_pw2 = $('#user_pw2').val()
+    name = $('name').val()
+    alert(user_id + user_pw1 + user_pw2 + name)
+    $.ajax({
+        url:'/signup',
+        type:'post',
+        data:{
+            'user_id': user_id,
+            'user_pw1': user_pw1,
+            'user_pw2': user_pw2,
+            'name': name
+        },
+        success: function(res){
+                console.log(res)
+                if(res['result'] === 'success'){
+                    alert("회원가입 성공")
+                    window.location.href = '/home'                    
+                } else{
+                    msg = document.querySelector('#login_msg');
+
+                    if(res['result'] === 'check_id') {
+                        msg.innerText = '이미 존재하는 아이디입니다.'
+                    } else if(res['result'] === 'pw_length') {
+                        msg.innerText = '비밀번호는 8자리 이상으로 입력해 주세요.'
+                    } else if(res['result'] === 'check_pw') {
+                        msg.innerText = '비밀번호가 일치하지 않습니다.'
+                    }
+
+
+                    if(msg.style.display === 'none'){
+                        msg.style.display = 'block';
+                    }
+                }
+            }
+    })
+}
+</script>
+
+{% endblock %}
+
+{% block content %}
+    <main>
+        <h1>Get Started with your account.</h1>
+        <form action="" method='POST'>
+            <p>아이디 :</p> <input type="email" id="user_id" required />
+            <p>비밀번호 :</p> <input type="password" id="user_pw1" required />
+            <p>비밀번호 확인 :</p> <input type="password" id="user_pw2" required />
+            <p>이름 :</p> <input type="text" id="name" required />
+            <button onClick="signup()">sign-up!</button>
+        </form>
+        <p id="login_msg"></p>
+    </main>
+{% endblock %}
