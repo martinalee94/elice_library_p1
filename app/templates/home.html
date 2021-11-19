@@ -1,4 +1,41 @@
 {% extends 'base.html' %}
+{% block style %}
+<style>
+    #book-title a{
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color:black
+    }
+    #available{
+        color:green;
+    }
+    #no-available{
+        color:orangered;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function bookSearch(){
+        let keyword = document.querySelector('#keyword').value
+        $.ajax({
+            url:'/home',
+            type:'GET',
+            data:{
+                'keyword':keyword
+            },
+            success:function(res){
+                if(res['result'] === 'success'){
+                    return render_template('/home')                  
+                } 
+            }
+        })
+        keyword=""
+    }
+</script>
+{% endblock %}
 
 {% block content %}
     <main>
@@ -7,10 +44,11 @@
         <div class="col-lg-6 col-md-8 mx-auto">
             <h1 class="fw-light">Elice Library Book List</h1>
             <p class="lead text-muted">엘리스 도서관 책 목록 및 대여 현황</p>
+            <p class="lead text-muted">현재 남은 책: {{count}}권</p>
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+              <input id='keyword' type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+              <button type="button" onClick="bookSearch()">검색</button>
             </form>
-            <a href="#" class="btn btn-primary my-2">Main call to action</a>
             <!--<a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
             </p>
         </div>
@@ -29,15 +67,19 @@
                 <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
                 <div class="card-body">
-                <p><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a> </p>
+                <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
                 <p>{{book.author}} - {{book.publisher}}</p>
-                
+                <p>{{book.stock}}권 남음</p>
                 <!--<p class="card-text">{{book.description}}</p>-->
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-outline-secondary">대여하기</button>
                     </div>
-                    <small class="text-muted">대여가능여부</small>
+                    {% if book.stock == 0 %}
+                        <small id="no-available">대여불가</small>
+                    {% else %}
+                        <small id="available">대여가능</small>
+                    {% endif %}
                 </div>
                 </div>
             </div>
@@ -48,5 +90,19 @@
     </div>
 
     </main>
-    
+    <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item disabled">
+            <a class="page-link">Previous</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">2</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
 {% endblock %}

@@ -53,21 +53,21 @@
         <p id="login_msg"></p>
         <button onClick="login()">로그인</button>
     </form> -->
-    
-    <main class="form-signin">
-        <form method='POST'>
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="userId" name="userId"placeholder="name@example.com" required>
-                <label for="floatingInput">Email address</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="userPw" name="userPw" placeholder="Password" required />
-                <label for="floatingPassword">Password</label>
-            </div>
-            <p id="login_msg"></p>
-            <button type="button" onClick="login()">로그인</button>
-            <button type="button">회원가입</button>
-        </form>
-    </main>
-
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+            <form method='POST'>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="userId" name="userId" placeholder="name@example.com" required>
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="userPw" name="userPw" placeholder="Password" required />
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <p id="login_msg"></p>
+                <button type="button" onClick="login()">로그인</button>
+                <button type="button">회원가입</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

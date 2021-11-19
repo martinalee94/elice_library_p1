@@ -1,7 +1,7 @@
 from flask import Flask, request, redirect
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-import config
+import config, os
 
 # db 객체를 create_app 함수 안에서 생성하면 블루프린트와 같은 다른 모듈에서 불러올 수  없음
 # db, migrate와 같은 객체를 create_app 함수 밖에서 생성
@@ -11,7 +11,8 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(config)
-
+    app.secret_key = os.urandom(12).hex()
+    
     # ORM 실제 객체 초기화는 create_app 함수에서 init_app 함수를 통해 진행
     db.init_app(app)
     migrate.init_app(app, db)

@@ -1,60 +1,109 @@
 {% extends 'base.html' %}
 
+{% block style %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+{% endblock %}
+
 {% block scripts %}
 <script>
-function signup(){
-    user_id = $('#user_id').val()
-    user_pw1 = $('#user_pw1').val()
-    user_pw2 = $('#user_pw2').val()
-    name = $('name').val()
-    alert(user_id + user_pw1 + user_pw2 + name)
-    $.ajax({
-        url:'/user/signup',
-        type:'post',
-        data:{
-            'user_id': user_id,
-            'user_pw1': user_pw1,
-            'user_pw2': user_pw2,
-            'name': name
-        },
-        success: function(res){
+    function signup() {
+        user_id = $('#user_id').val()
+        user_pw1 = $('#user_pw1').val()
+        user_pw2 = $('#user_pw2').val()
+        name = $('name').val()
+        //alert(user_id + user_pw1 + user_pw2 + name)
+        $.ajax({
+            url: '/user/signup',
+            type: 'post',
+            data: {
+                'user_id': user_id,
+                'user_pw1': user_pw1,
+                'user_pw2': user_pw2,
+                'name': name
+            },
+            success: function (res) {
                 console.log(res)
-                if(res['result'] === 'success'){
+                if (res['result'] === 'success') {
                     alert("회원가입 성공")
-                    window.location.href = '/home'                    
-                } else{
+                    window.location.href = '/user/login'
+                } else {
                     msg = document.querySelector('#login_msg');
 
-                    if(res['result'] === 'check_id') {
+                    if (res['result'] === 'check_id') {
                         msg.innerText = '이미 존재하는 아이디입니다.'
-                    } else if(res['result'] === 'pw_length') {
+                    } else if (res['result'] === 'pw_length') {
                         msg.innerText = '비밀번호는 8자리 이상으로 입력해 주세요.'
-                    } else if(res['result'] === 'check_pw') {
+                    } else if (res['result'] === 'check_pw') {
                         msg.innerText = '비밀번호가 일치하지 않습니다.'
+                    } else if(res['result'] === 'check_email'){
+                        msg.innerText = '올바른 이메일 형식이 아닙니다.'
                     }
 
 
-                    if(msg.style.display === 'none'){
+                    if (msg.style.display === 'none') {
                         msg.style.display = 'block';
                     }
                 }
             }
-    })
-}
+        })
+    }
 </script>
 
 {% endblock %}
 
 {% block content %}
-    <main>
-        <h1>Get Started with your account.</h1>
-        <form action="/user/signup" method='POST'>
-            <p>아이디 :</p> <input type="email" id="user_id" required />
-            <p>비밀번호 :</p> <input type="password" id="user_pw1" required />
-            <p>비밀번호 확인 :</p> <input type="password" id="user_pw2" required />
-            <p>이름 :</p> <input type="text" id="name" required />
-            <button type="button" onClick="signup()">sign-up!</button>
-        </form>
-        <p id="login_msg"></p>
-    </main>
+<main>
+    <!-- <form action="/user/signup" method='POST'>
+        <p>아이디 :</p> <input type="email" id="user_id" required />
+        <p>비밀번호 :</p> <input type="password" id="user_pw1" required />
+        <p>비밀번호 확인 :</p> <input type="password" id="user_pw2" required />
+        <p>이름 :</p> <input type="text" id="name" required />
+        <button type="button" onClick="signup()">sign-up!</button>
+    </form> -->
+    <p id="login_msg"></p>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">Create an account.</h2>
+                <h2 class="heading-section">It's free and always will be.</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+                <div class="login-wrap p-4 p-md-5">
+                    <div class="img" style="background-image: url({{url_for('static', filename='img/icon.png')}})">
+                    </div>
+                    <form action="/user/signup" method='POST' class="signup-form">
+                        <div class="form-group mb-3">
+                            <label class="label" for="name">Full Name</label>
+                            <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="label" for="email">Email Address</label>
+                            <input type="email" id="user_id" class="form-control" placeholder="johndoe@gmail.com" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="label" for="password">Password</label>
+                            <input id="user_pw1" type="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="label" for="password">Check Password</label>
+                            <input id="user_pw2" type="password" class="form-control" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" onClick="signup()"
+                                class="form-control btn btn-primary submit px-3">Sign Up</button>
+                        </div>
+                    </form>
+                    <p id="login_msg"></p>
+                    <p>I'm already a member! <a data-toggle="tab" href="#" onClick="window.location.href = '/user/login'">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="{{url_for('static', filename='js/popper.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/main.js')}}"></script>
 {% endblock %}

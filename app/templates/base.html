@@ -15,7 +15,7 @@
     <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
     <!-- Bootstrap core CSS -->
     <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-    
+
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -34,7 +34,9 @@
         text-decoration: none; 
         color: white;
       }
-    </style>    
+    </style>
+    {% block style %}
+    {% endblock %}
   </head>
 
   {% block scripts %}
@@ -53,15 +55,18 @@
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/home" class="nav-link px-2 text-secondary">Home</a></li>
             <li><a href="#" class="nav-link px-2 text-white">My Dashboard</a></li>
-            <li><a href="#" class="nav-link px-2 text-white">News</a></li>
             <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
             <li><a href="#" class="nav-link px-2 text-white">About</a></li>
           </ul>
   
  
           <div class="text-end">
-            <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/login'">Login</button>
-            <button type="button" class="btn btn-warning" onClick="window.location.href = '/user/signup'">Sign-up</button>
+            {%if session['login'] %}
+              <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/logout'">Logout</button>
+            {% else %}
+              <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/login'">Login</button>
+              <button type="button" class="btn btn-warning" onClick="window.location.href = '/user/signup'">Sign-up</button>
+            {% endif %}
           </div>
         </div>
       </div>

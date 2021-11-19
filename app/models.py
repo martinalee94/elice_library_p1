@@ -41,3 +41,28 @@ class Books(db.Model):
     image = db.Column(db.String(500), nullable=False, unique=True )
     stock = db.Column(db.Integer, nullable=False, default=1)
     rating = db.Column(db.Float, nullable=False)
+
+
+class Rent(db.Model):
+    __tablename__ = 'rent'
+    def __init__(self, user_id, pw_hash, name):
+        self.user_id = user_id
+        self.pw_hash = pw_hash
+        self.name = name
+
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    user_id = db.Column(db.String(256), nullable=False, unique=True)
+    pw_hash = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+
+class History(db.Model):
+    __tablename__ = 'history'
+    def __init__(self, user_id, pw_hash, name):
+        self.user_id = user_id
+        self.pw_hash = pw_hash
+        self.name = name
+
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    user_id = db.Column(db.String(256), nullable=False, unique=True)
+    pw_hash = db.Column(db.String(256), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
