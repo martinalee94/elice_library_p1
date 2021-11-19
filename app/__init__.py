@@ -21,11 +21,14 @@ def create_app():
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import books
-    app.register_blueprint(books.bp)
+    from . import main
+    app.register_blueprint(main.bp)
 
     from . import detail
     app.register_blueprint(detail.bp)
+
+    from . import dashboard
+    app.register_blueprint(dashboard.bp)
 
     @app.route('/')
     def welcome():

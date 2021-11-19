@@ -10,10 +10,10 @@ bcrypt = Bcrypt()
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('login')
-    if login is None:
+    if user_id is None:
         g.user = None
     else:
-        g.user = Users.query.filter(Users.user_id == user_id).first()
+        g.user = Users.query.filter(Users.id == user_id).first()
 
 @bp.route('/login', methods=['POST', 'GET'])
 def login():

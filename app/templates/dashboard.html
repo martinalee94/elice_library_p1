@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block style %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+   function returnBook(id){
+        book_id = id
+        $.ajax({
+            url:'/dashboard/${g.user.id}',
+            type:'POST',
+            data:{
+                'book_id':book_id
+            },
+            success:function(res){
+                if(res['result'] === 'success'){
+                    alert('반납성공')
+                } else{
+                    alert('잠시 후에 다시 시도해 주세요.')
+                }
+                window.location.reload(true)
+            }
+        })
+    }
+</script>
+{% endblock %}
+
+
+{% block content %}
+
+<main>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Elice Library Book List</h1>
+            <p class="lead text-muted">나의 대여 현황</p>
+            <p class="lead text-muted">현재 대여 중인 책: {{cur_count}}권</p>
+            <p class="lead text-muted">총 대여 내역: {{total_count}}권</p>
+        </div>
+        </div>
+    </section>
+    
+    
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for book in book_list%}
+            <div class="col">
+            <div class="card shadow-sm">
+                <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+
+                <div class="card-body">
+                <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
+                <p>{{book.author}} - {{book.publisher}}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book.id}}')">반납하기</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+    </main>
+{% endblock %}
