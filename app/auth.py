@@ -21,9 +21,8 @@ def login():
         if request.method == 'GET':
             return render_template('login.html')
         elif request.method == 'POST':
-            user_id = request.form.get('id')
-            user_pw = request.form.get('pw')
-
+            user_id = request.form.get('user_id')
+            user_pw = request.form.get('user_pw')
             if len(user_pw) < 8: 
                 return jsonify({'result':'pw_length'})
 
@@ -34,7 +33,7 @@ def login():
             else:
                 if bcrypt.check_password_hash(user.pw_hash, user_pw):
                     session['login'] = user.id
-                    return jsonify({"result": "success"})
+                    return jsonify({"result": "success", 'name':user.name})
                 else:
                     return jsonify({'result':'fail'})
     else:
@@ -50,14 +49,17 @@ def logout():
 def signup():
     if session.get('login') is None:
         regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+[.]?\w{2,3}$'
+
         if request.method == 'GET':
             return render_template('signup.html')   
         elif request.method == 'POST':
             user_id = request.form.get('user_id')
             user_pw1 = request.form.get('user_pw1')
             user_pw2 = request.form.get('user_pw2')
-            name = request.form.get('name')
-            
+            user_name = request.form.get('user_name')
+            print(type(user_name), user_name)
+            if user_name.find(" ") >= 0:
+                return jsonify({'result':'check_name'})
             valid = re.search(regex, user_id)
             if not valid:
                 return jsonify({'result':'check_email'})
@@ -74,7 +76,7 @@ def signup():
                 return jsonify({'result':'check_id'})
             else:
                 pw_hash = bcrypt.generate_password_hash(user_pw2).decode()
-                user = Users(user_id, pw_hash, name)
+                user = Users(user_id, pw_hash, user_name)
                 db.session.add(user)
                 db.session.commit()
                 return jsonify({'result':'success'})

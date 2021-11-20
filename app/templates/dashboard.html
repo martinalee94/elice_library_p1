@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block style %}
+<style>
+    #warning{
+        color: orangered;
+    }
+</style>
 {% endblock %}
 
 {% block scripts %}
@@ -55,11 +60,17 @@
                 <p id="book-title"><a href="/books/detail/{{book[1].isbn}}">{{book[1].book_name}}</a></p>
                 <p>{{book[1].author}} - {{book[1].publisher}}</p>
                 <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book[1].id}}')">반납하기</button>
-                    </div>
                 </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book[1].id}}')">반납하기</button>
+                        </div>
+                        {% if book[0].return_date.strftime("%Y-%m-%d") < today %}
+                            <small id="warning">연체중</small>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             </div>

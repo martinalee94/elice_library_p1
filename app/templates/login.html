@@ -1,37 +1,42 @@
 {% extends 'base.html' %}
-
+{% block style %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 <style>
-    #login_msg{
-        display: none;
+    #sign-form {
+        margin-top: 20px;
     }
+
 </style>
+{% endblock %}
+
 
 {% block scripts %}
 <script>
-    function login(){
-        let id = $("#userId").val()
-        let pw = $("#userPw").val()
+    function login() {
+        user_id = $("#user_id").val()
+        user_pw = $("#user_pw").val()
 
         $.ajax({
             url: '/user/login',
             type: 'POST',
             data: {
-                'id': id,
-                'pw': pw,
+                'user_id': user_id,
+                'user_pw': user_pw,
             },
-            success: function(res){
-                console.log(res)
+            success: function (res) {
                 msg = document.querySelector('#login_msg');
-                if(msg.style.display === 'none'){
-                        msg.style.display = 'block';
+                if (msg.style.display === 'none') {
+                    msg.style.display = 'block';
                 }
 
-                if(res['result'] === 'success'){
-                    alert("로그인 성공")
-                    window.location.href = '/home'                    
-                } else if(res['result'] === 'none user'){
+                if (res['result'] === 'success') {
+                    label = document.querySelector('#exampleModalLabel');
+                    label.innerText = 'Welcome'
+                    msg.innerText = res['name'] + '님 반갑습니다!'
+                    window.location.href = '/home'
+                } else if (res['result'] === 'none user') {
                     msg.innerText = '존재하지 않는 사용자 입니다.'
-                } else if(res['result'] === 'pw_length'){
+                } else if (res['result'] === 'pw_length') {
                     msg.innerText = '비밀번호는 8자리 이상으로 입력해 주세요.'
                 } else {
                     msg.innerText = '아이디 혹은 비밀번호가 일치하지 않습니다.'
@@ -45,29 +50,73 @@
 
 
 {% block content %}
-    <!-- <form method="POST">
-        <p>아이디: </p>
-        <input type="text" id="userId" name="userId">
-        <p>비밀번호: </p>
-        <input type="text" id="userPw" name="userPw">
-        <p id="login_msg"></p>
-        <button onClick="login()">로그인</button>
-    </form> -->
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center mb-5">
-            <form method='POST'>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="userId" name="userId" placeholder="name@example.com" required>
-                    <label for="floatingInput">Email address</label>
+<main>
+    <!-- <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <form method='POST'>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="userId" name="userId" placeholder="name@example.com" required>
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="userPw" name="userPw" placeholder="Password" required />
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <p id="login_msg"></p>
+                    <button type="button" onClick="login()">로그인</button>
+                    <button type="button">회원가입</button>
+                </form>
+            </div>
+        </div> -->
+
+    <div class="container">
+        <div id="sign-form" class="row justify-content-center">
+            <div class="col-md-7 col-lg-8">
+                <div class="login-wrap p-4 sign-size">
+                    <div class="img" style="background-image: url({{url_for('static', filename='img/icon.png')}})">
+                    </div>
+
+                    <form method='POST' class="signup-form was-validated">
+                        <div class="form-group mb-2">
+                            <label class="label" for="user_id">Email Address</label>
+                            <input type="email" id="user_id" class="form-control" placeholder="example@example.com"
+                                required>
+                            <div class="invalid-feedback">
+                                이메일을 입력해 주세요.
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="label" for="user_pw">Password(8자리 이상)</label>
+                            <input id="user_pw" type="password" class="form-control" placeholder="8자리 이상" required>
+                        </div>
+
+                        <div class="form-group">
+                            <!-- Button trigger modal -->
+                            <button type="button" onClick="login()" class="form-control btn btn-primary submit px-3"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">Sign In</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="userPw" name="userPw" placeholder="Password" required />
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <p id="login_msg"></p>
-                <button type="button" onClick="login()">로그인</button>
-                <button type="button">회원가입</button>
-            </form>
+            </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">확인해 주세요!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="login_msg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

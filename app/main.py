@@ -28,6 +28,7 @@ def home():
             book = Books.query.filter(Books.id == book_id).first()
             if book.stock == 0:
                 return jsonify({'result':'no stock'})
+                
             user = Users.query.filter(Users.id == session['login']).first()
             book.stock -= 1
             rentInfo = Rent.query.filter((Rent.user_id == user.id) & (Rent.status == 1)).all()

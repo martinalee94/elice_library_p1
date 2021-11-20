@@ -2,6 +2,13 @@
 
 {% block style %}
 <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+<style>
+    #sign-form{
+        margin-top: 20px;
+    }
+
+
+</style>
 {% endblock %}
 
 {% block scripts %}
@@ -10,8 +17,7 @@
         user_id = $('#user_id').val()
         user_pw1 = $('#user_pw1').val()
         user_pw2 = $('#user_pw2').val()
-        name = $('name').val()
-        //alert(user_id + user_pw1 + user_pw2 + name)
+        user_name = $('#user_name').val()
         $.ajax({
             url: '/user/signup',
             type: 'post',
@@ -19,16 +25,16 @@
                 'user_id': user_id,
                 'user_pw1': user_pw1,
                 'user_pw2': user_pw2,
-                'name': name
+                'user_name': user_name,
             },
             success: function (res) {
                 console.log(res)
+                msg = document.querySelector('#login_msg');
+
                 if (res['result'] === 'success') {
-                    alert("회원가입 성공")
+                    msg.innerText = '회원가입이 완료 되었습니다.'
                     window.location.href = '/user/login'
                 } else {
-                    msg = document.querySelector('#login_msg');
-
                     if (res['result'] === 'check_id') {
                         msg.innerText = '이미 존재하는 아이디입니다.'
                     } else if (res['result'] === 'pw_length') {
@@ -37,6 +43,8 @@
                         msg.innerText = '비밀번호가 일치하지 않습니다.'
                     } else if(res['result'] === 'check_email'){
                         msg.innerText = '올바른 이메일 형식이 아닙니다.'
+                    } else if(res['result'] === 'check_name'){
+                        msg.innerText = '이름을 공백없이 정확히 입력해 주세요.'
                     }
 
 
@@ -60,47 +68,71 @@
         <p>이름 :</p> <input type="text" id="name" required />
         <button type="button" onClick="signup()">sign-up!</button>
     </form> -->
+    
     <div class="container">
-        <div class="row">
-            <div class="col-md-6 text-center mb-5">
-                <h2 class="heading-section">Create an account.</h2>
-                <h2 class="heading-section">It's free and always will be.</h2>
-            </div>
-            
-            <div class="col-md-6 text-center mb-5">
-                <div class="login-wrap p-4 p-md-5">
+        <div id="sign-form" class="row justify-content-center">
+            <div class="col-md-7 col-lg-8">
+                <div class="login-wrap p-4 sign-size">
                     <div class="img" style="background-image: url({{url_for('static', filename='img/icon.png')}})">
                     </div>
-                    <form action="/user/signup" method='POST' class="signup-form">
-                        <div class="form-group mb-3">
-                            <label class="label" for="name">Full Name</label>
-                            <input type="text" id="name" class="form-control is-invalid" placeholder="John Doe" required>
+                    
+
+                    <form action="/user/signup" method='POST' class="signup-form was-validated">
+                        <div class="form-group mb-2">
+                            <label class="label" for="user_name">User Name</label>
+                            <input type="text" id="user_name" class="form-control" placeholder="이름" required>
+                            <div class="invalid-feedback">
+                                이름을 입력해 주세요.
+                            </div>
                         </div>
-                        <div class="form-group mb-3">
-                            <label class="label" for="email">Email Address</label>
-                            <input type="email" id="user_id" class="form-control" placeholder="johndoe@gmail.com" required>
+                      
+                        <div class="form-group mb-2">
+                            <label class="label" for="user_id">Email Address</label>
+                            <input type="email" id="user_id" class="form-control" placeholder="example@example.com" required>
+                            <div class="invalid-feedback">
+                                이메일을 입력해 주세요.
+                            </div>
                         </div>
-                        <div class="form-group mb-3">
-                            <label class="label" for="password">Password</label>
-                            <input id="user_pw1" type="password" class="form-control" placeholder="Password" required>
+                        <div class="form-group mb-2">
+                            <label class="label" for="user_pw1">Password(8자리 이상)</label>
+                            <input id="user_pw1" type="password" class="form-control" placeholder="8자리 이상" required>
                         </div>
-                        <div class="form-group mb-3">
-                            <label class="label" for="password">Check Password</label>
-                            <input id="user_pw2" type="password" class="form-control" placeholder="Password" required>
+                        <div class="form-group mb-2">
+                            <label class="label" for="user_pw2">Check Password(8자리 이상)</label>
+                            <input id="user_pw2" type="password" class="form-control" placeholder="8자리 이상" required>
                         </div>
-                        <p id="login_msg"></p>
 
                         <div class="form-group">
+                            <!-- Button trigger modal -->
                             <button type="button" onClick="signup()"
-                                class="form-control btn btn-primary submit px-3">Sign Up</button>
+                                class="form-control btn btn-primary submit px-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Sign Up</button>
                         </div>
                     </form>
-                    <p id="login_msg"></p>
+                    
                     <p>I'm already a member! <a data-toggle="tab" href="#" onClick="window.location.href = '/user/login'">Sign In</a></p>
                 </div>
             </div>
         </div>
     </div>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">확인해 주세요!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p id="login_msg"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 <script src="{{url_for('static', filename='js/popper.js')}}"></script>
 <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
