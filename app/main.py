@@ -8,14 +8,20 @@ bp = Blueprint("main", __name__, url_prefix="/")
 @bp.route('/home', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        keyword = request.form.get('keyword')
+        keyword = request.args.get('keyword')
         count = db.session.query(db.func.sum(Books.stock)).first()[0]
-        if keyword is None:
-            book_list = Books.query.all()
-            return render_template('home.html', book_list = book_list, count = count)
-        else:
-            book_selection = Books.query.filter(Books.book_name.like(f"%{keyword}%")).all()
+
+        if keyword == "":
+            return jsonify({'result':'no keyword'})
+        elif keyword is not None:
+            book_selection = Books.query.filter(Books.book_name.like("%입문%")).all()
+            for b in book_selection:
+                print(b)
             return render_template('home.html', book_list = book_selection, count = count)
+        
+        book_list = Books.query.all()
+        return render_template('home.html', book_list = book_list, count = count)                       
+
     elif request.method == 'POST':
         if session.get('login') is not None:
             book_id = int(request.form.get('book_id'))

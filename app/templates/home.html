@@ -1,64 +1,82 @@
 {% extends 'base.html' %}
 {% with msg = get_flashed_messages() %}
-    {% if msg %}
-        <script>
-            alert('{{msg[0]}}')
-        </script>
-    {% endif %}
+{% if msg %}
+<script>
+    alert('{{msg[0]}}')
+</script>
+{% endif %}
 {% endwith %}
+
 {% block style %}
 <style>
-    #book-title a{
+    #book-title a {
         text-decoration: none;
         font-weight: bold;
         font-size: 1.2rem;
-        color:black
+        color: black;
     }
-    #available{
-        color:green;
+
+    #available {
+        color: green;
     }
-    #no-available{
-        color:orangered;
+
+    #no-available {
+        color: orangered;
+    }
+
+    #search-position-custom{
+        position:absolute;
+        z-index:999;
+        top:0;
+        left:0;
+        right:0;
+        margin-top: 5rem;
+        color:white;
+    }
+    #search-container{
+        background-color:rgba(0, 0, 0, 0.486);
+        
     }
 </style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    function bookSearch(){
-        let keyword = document.querySelector('#keyword').value
+    function bookSearch() {
+        let keyword = document.querySelector('#keyword')
         $.ajax({
-            url:'/home',
-            type:'GET',
-            data:{
-                'keyword':keyword
+            url: '/home',
+            type: 'GET',
+            data: {
+                'keyword': keyword.value
             },
-            success:function(res){
-                if(res['result'] === 'success'){
-                    return render_template('/home')                  
-                } 
+            success: function (res) {
+                if (res['result'] === 'no keyword') {
+                    alert("검색어를 입력해 주세요.")
+                }
             }
         })
-        keyword=""
+        keyword.value = ""
+
     }
 
-    function rentBook(id){
+    function rentBook(id) {
         book_id = id
         $.ajax({
-            url:'/home',
-            type:'POST',
-            data:{
-                'book_id':book_id
+            url: '/home',
+            type: 'POST',
+            data: {
+                'book_id': book_id
             },
-            success:function(res){
-                if(res['result'] === 'success'){
+            success: function (res) {
+                if (res['result'] === 'success') {
                     alert('대여성공')
-                    
-                } else if(res['result'] === 'no session'){
+
+                } else if (res['result'] === 'no session') {
                     alert('로그인이 필요한 서비스입니다.')
-                } else if(res['result'] === 'no stock'){
+                } else if (res['result'] === 'no stock') {
                     alert('현재 대여 가능한 재고가 없습니다.')
-                } else if(res['result'] === 'rent exists'){
+                } else if (res['result'] === 'rent exists') {
                     alert('대여 이력이 존재합니다.')
                 }
                 window.location.reload(true)
@@ -69,74 +87,92 @@
 {% endblock %}
 
 {% block content %}
-    <main>
-    <section class="py-5 text-center container">
-        <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-light">Elice Library Book List</h1>
-            <p class="lead text-muted">엘리스 도서관 책 목록 및 대여 현황</p>
-            <p class="lead text-muted">현재 남은 책: {{count}}권</p>
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <input id='keyword' type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-              <button type="button" onClick="bookSearch()">검색</button>
-            </form>
-            <!--<a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
-            </p>
+<div>
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" >
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{{ url_for('static', filename='img/main_c4.jpg') }}" class="d-block w-100" alt="main-carousel-1">
+          </div>
+          <div class="carousel-item">
+            <img src="{{ url_for('static', filename='img/main_c2.jpg') }}" class="d-block w-100" alt="main-carousel-2">
+          </div>
+          <div class="carousel-item">
+            <img src="{{ url_for('static', filename='img/main_c3.jpg') }}" class="d-block w-100" alt="main-carousel-3">
+          </div>
         </div>
+      </div>
+
+      <section id="search-position-custom" class="py-1 text-center container">
+        <div id="search-container" class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1>Elice Library Book List</h1>
+                <p class="lead">엘리스 도서관 책 목록 및 대여 현황</p>
+                <p class="lead">현재 남은 책: {{count}}권</p>
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                    <div class="input-group">
+                    <input id='keyword' type="search" class="form-control form-control-dark" placeholder="Search..."
+                        aria-label="Search">
+                    <button type="button" class="btn btn-dark" onClick="bookSearch()">검색</button>
+                    </div>
+                </form>
+                <!--<a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
+                </p>
+            </div>
         </div>
     </section>
-    
-    
+    </div>
+
+
 
     <div class="album py-5 bg-light">
         <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+                {% for book in book_list%}
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="card-img-top"
+                            width="40%" style="margin-right: auto; margin-left: auto;" height="180" alt="book_image">
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {% for book in book_list%}
-            <div class="col">
-            <div class="card shadow-sm">
-                <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+                        <div class="card-body">
+                            <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
+                            <p>{{book.author}} - {{book.publisher}}</p>
+                            <p>{{book.stock}}권 남음</p>
+                        </div>
 
-                <div class="card-body">
-                <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
-                <p>{{book.author}} - {{book.publisher}}</p>
-                <p>{{book.stock}}권 남음</p>
-                <!--<p class="card-text">{{book.description}}</p>-->
-                <div class="d-flex justify-content-between align-items-center">
-                    {% if book.stock == 0 %}
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" disabled onClick="rentBook('{{book.id}}')">대여하기</button>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                {% if book.stock == 0 %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary" disabled
+                                    onClick="rentBook('{{book.id}}')">대여하기</button>
+                                <small id="no-available">대여불가</small>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn btn-outline-success"
+                                    onClick="rentBook('{{book.id}}')">대여하기</button>
+                                <small id="available">대여가능</small>
+                                {% endif %}
+                            </div>
                         </div>
-                        <small id="no-available">대여불가</small>
-                    {% else %}
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick="rentBook('{{book.id}}')">대여하기</button>
-                        </div>
-                        <small id="available">대여가능</small>
-                    {% endif %}
+                    </div>
                 </div>
-                </div>
+                {% endfor %}
             </div>
-            </div>
-            {% endfor %}
-        </div>
         </div>
     </div>
-    </main>
+</main>
 
-    <nav aria-label="...">
-        <ul class="pagination">
-          <li class="page-item disabled">
+<nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item disabled">
             <a class="page-link">Previous</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item active" aria-current="page">
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active" aria-current="page">
             <a class="page-link" href="#">2</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
+        </li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
             <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-      </nav>
+        </li>
+    </ul>
+</nav>
 {% endblock %}

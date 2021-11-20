@@ -7,7 +7,7 @@
    function returnBook(id){
         book_id = id
         $.ajax({
-            url:'/dashboard/${g.user.id}',
+            url:'/dashboard/{{g.user.id}}',
             type:'POST',
             data:{
                 'book_id':book_id
@@ -29,34 +29,35 @@
 {% block content %}
 
 <main>
-    <section class="py-5 text-center container">
+    <section class="py-1 text-center container">
         <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-light">Elice Library Book List</h1>
-            <p class="lead text-muted">나의 대여 현황</p>
+            <h1 class="fw-light">나의 대여 현황</h1>
             <p class="lead text-muted">현재 대여 중인 책: {{cur_count}}권</p>
             <p class="lead text-muted">총 대여 내역: {{total_count}}권</p>
         </div>
         </div>
     </section>
     
-    
+    <div class="container px-4 py-5" id="custom-cards">
+        <h2 class="pb-2 border-bottom">대여 중</h2>
+    </div>
 
     <div class="album py-5 bg-light">
         <div class="container">
-
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
             {% for book in book_list%}
             <div class="col">
-            <div class="card shadow-sm">
-                <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+            <div class="card shadow-sm h-100">
+                <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
                 <div class="card-body">
-                <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
-                <p>{{book.author}} - {{book.publisher}}</p>
+                <p id="book-title"><a href="/books/detail/{{book[1].isbn}}">{{book[1].book_name}}</a></p>
+                <p>{{book[1].author}} - {{book[1].publisher}}</p>
+                <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book.id}}')">반납하기</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book[1].id}}')">반납하기</button>
                     </div>
                 </div>
                 </div>
@@ -66,5 +67,30 @@
         </div>
         </div>
     </div>
+
+    <div class="container px-4 py-5" id="custom-cards">
+        <h2 class="pb-2 border-bottom">대여 기록</h2>
+    </div>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            {% for book in history%}
+            <div class="col">
+            <div class="card shadow-sm h-100">
+                <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+
+                <div class="card-body">
+                <p id="book-title"><a href="/books/detail/{{book[1].isbn}}">{{ book[1].book_name}}</a></p>
+                <p>{{book[1].author}} - {{book[1].publisher}}</p>
+                <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+
     </main>
 {% endblock %}
