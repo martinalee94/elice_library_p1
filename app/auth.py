@@ -57,7 +57,6 @@ def signup():
             user_pw1 = request.form.get('user_pw1')
             user_pw2 = request.form.get('user_pw2')
             user_name = request.form.get('user_name')
-            print(type(user_name), user_name)
             if user_name.find(" ") >= 0:
                 return jsonify({'result':'check_name'})
             valid = re.search(regex, user_id)

@@ -12,6 +12,9 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{url_for('static', filename='js/popper.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/main.js')}}"></script>
 <script>
     function signup() {
         user_id = $('#user_id').val()
@@ -28,7 +31,6 @@
                 'user_name': user_name,
             },
             success: function (res) {
-                console.log(res)
                 msg = document.querySelector('#login_msg');
 
                 if (res['result'] === 'success') {
@@ -61,14 +63,6 @@
 
 {% block content %}
 <main>
-    <!-- <form action="/user/signup" method='POST'>
-        <p>아이디 :</p> <input type="email" id="user_id" required />
-        <p>비밀번호 :</p> <input type="password" id="user_pw1" required />
-        <p>비밀번호 확인 :</p> <input type="password" id="user_pw2" required />
-        <p>이름 :</p> <input type="text" id="name" required />
-        <button type="button" onClick="signup()">sign-up!</button>
-    </form> -->
-    
     <div class="container">
         <div id="sign-form" class="row justify-content-center">
             <div class="col-md-7 col-lg-8">
@@ -134,7 +128,5 @@
     </div>
   </div>
 </main>
-<script src="{{url_for('static', filename='js/popper.js')}}"></script>
-<script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
-<script src="{{url_for('static', filename='js/main.js')}}"></script>
+
 {% endblock %}
