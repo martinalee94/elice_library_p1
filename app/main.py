@@ -1,25 +1,23 @@
 from flask import Flask, Blueprint, render_template, jsonify, session, request, g, redirect, url_for
 from app import db
-from app.models import Users, Books, Rent
+from app.models import Users, Books, Rent, Rating
 from sqlalchemy.sql import func
 
-bp = Blueprint("main", __name__, url_prefix="/")
+bp = Blueprint("main", __name__, url_prefix="/home")
 
-@bp.route('/home', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        keyword = request.args.get('keyword')
         count = db.session.query(db.func.sum(Books.stock)).first()[0]
-
-        if keyword == "":
-            return jsonify({'result':'no keyword'})
-        elif keyword is not None:
-            book_selection = Books.query.filter(Books.book_name.like("%입문%")).all()
-            for b in book_selection:
-                print(b)
-            return render_template('home.html', book_list = book_selection, count = count)
-        
         book_list = Books.query.all()
+        sum_list = db.session.query(Rating.book_id, func.sum(Rating.point)).group_by(Rating.book_id).all()
+        count_list = db.session.query(Rating.book_id, func.count(Rating.book_id)).group_by(Rating.book_id).all()
+
+        for s, c in zip(sum_list, count_list):
+            book = Books.query.filter(Books.id == int(s[0])).first()
+            book.rating = round(int(s[1]) / int(c[1]))
+            db.session.commit()
+
         return render_template('home.html', book_list = book_list, count = count)                       
 
     elif request.method == 'POST':
@@ -44,3 +42,17 @@ def home():
             return jsonify({'result':'success'})
         else:
             return jsonify({'result':'no session'})
+
+@bp.route('/search/', methods=['GET'])
+def search():
+    if request.method == 'GET':
+        keyword = request.args.get('keyword')
+        if keyword == "":
+            return jsonify({'result':'no keyword'})
+        elif keyword is not None:
+            book_selection = Books.query.filter(Books.book_name.like(f"%{keyword}%")).all()
+            count = len(book_selection)
+            for b in book_selection:
+                print(b.id, b.author, b.book_name)
+            print(count)
+            return render_template('home.html', book_list = book_selection, count = count)

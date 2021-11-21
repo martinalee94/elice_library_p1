@@ -37,6 +37,54 @@
         background-color:rgba(0, 0, 0, 0.486);
         
     }
+
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap");
+    .card-rating-area{
+        justify-content: center;
+        align-items: center;
+        font-family: "Inter", sans-serif;
+        background-color: #fdfdfd;
+        margin: 0;
+        word-wrap: normal;
+        height:2rem;
+        line-height: 2rem;
+    }
+    .star-rating {
+        display: flex;
+        font-size: 2rem;
+        position: relative;
+
+    }
+
+    .star-rating:before {
+        content: "\1f7ca\1f7ca\1f7ca\1f7ca\1f7ca";
+        color: #e5e5e5;
+        filter: drop-shadow(0 0.6rem 0.3rem rgba(0,0,0,0.05));
+    }
+
+    .star-rating__fill {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        animation: fill-star 2s ease-in-out;
+    }
+
+    .star-rating__fill:before {
+        content: "\1f7ca\1f7ca\1f7ca\1f7ca\1f7ca";
+        color: #FF619B;
+    }
+
+    @keyframes fill-star {
+        0% {
+            width: 0;
+        }
+    }
+    .rating-point{
+        font-size: 1rem;
+        display: block;
+    }
 </style>
 {% endblock %}
 
@@ -45,7 +93,7 @@
     function bookSearch() {
         let keyword = document.querySelector('#keyword')
         $.ajax({
-            url: '/home',
+            url: '/home/search/',
             type: 'GET',
             data: {
                 'keyword': keyword.value
@@ -56,8 +104,6 @@
                 }
             }
         })
-        keyword.value = ""
-
     }
 
     function rentBook(id) {
@@ -71,7 +117,6 @@
             success: function (res) {
                 if (res['result'] === 'success') {
                     alert('대여성공')
-
                 } else if (res['result'] === 'no session') {
                     alert('로그인이 필요한 서비스입니다.')
                 } else if (res['result'] === 'no stock') {
@@ -110,9 +155,9 @@
                 <p class="lead">현재 남은 책: {{count}}권</p>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
                     <div class="input-group">
-                    <input id='keyword' type="search" class="form-control form-control-dark" placeholder="Search..."
-                        aria-label="Search">
-                    <button type="button" class="btn btn-dark" onClick="bookSearch()">검색</button>
+                        <input id='keyword' type="search" class="form-control form-control-dark" placeholder="Search..."
+                            aria-label="Search">
+                        <button type="button" class="btn btn-dark" onClick="bookSearch()">검색</button>
                     </div>
                 </form>
                 <!--<a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
@@ -127,7 +172,7 @@
     <div class="album py-5 bg-light">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
-                {% for book in book_list%}
+                {% for book in book_list %}
                 <div class="col">
                     <div class="card shadow-sm h-100">
                         <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="card-img-top"
@@ -137,8 +182,16 @@
                             <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
                             <p>{{book.author}} - {{book.publisher}}</p>
                             <p>{{book.stock}}권 남음</p>
+                            
+                            <div class="card-rating-area">
+                                <div class="star-rating">
+                                    <span class="star-rating__fill" style="width:{{book.rating*10}}%"></span>
+                                    <small class="rating-point">({{book.rating}})</small>
+                                </div>
+                            </div>
+                            
                         </div>
-
+ 
                         <div class="card-footer">
                             <div class="d-flex justify-content-between align-items-center">
                                 {% if book.stock == 0 %}
