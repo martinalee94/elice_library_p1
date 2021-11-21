@@ -1,10 +1,5 @@
 {% extends 'base.html' %}
 {% block style %}
-<style>
-    #warning{
-        color: orangered;
-    }
-</style>
 {% endblock %}
 
 {% block scripts %}
@@ -68,7 +63,7 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book[1].id}}')">반납하기</button>
                         </div>
                         {% if book[0].return_date.strftime("%Y-%m-%d") < today %}
-                            <small id="warning">연체중</small>
+                            <span class="badge rounded-pill bg-danger">연체중</span>
                         {% endif %}
                     </div>
                 </div>
