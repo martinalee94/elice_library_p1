@@ -109,7 +109,7 @@
     function rentBook(id) {
         book_id = id
         $.ajax({
-            url: '/home',
+            url: '/home/',
             type: 'POST',
             data: {
                 'book_id': book_id
@@ -132,7 +132,7 @@
 {% endblock %}
 
 {% block content %}
-<div>
+<main>
     <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" >
         <div class="carousel-inner">
           <div class="carousel-item active">

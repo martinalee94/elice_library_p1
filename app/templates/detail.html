@@ -1,43 +1,99 @@
 {% extends 'base.html' %}
 
+{% block style %}
+<style>
+  .col img {
+    height: 40vh;
+  }
+  #book-review{
+    display: none;
+  }
+
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function showDesc(){
+    $('#book-description').show();
+    $('#review-btn').removeClass('active');
+    $('#book-review').hide();
+    $('#desc-btn').addClass('active');
+  }
+  function showReview(){
+    $('#book-review').show();
+    $('#review-btn').addClass('active')
+    $('#book-description').hide();
+    $('#desc-btn').removeClass('active')
+
+  }
+</script>
+{% endblock %}
 
 {% block content %}
-
-<div class="container px-4 py-5" id="custom-cards">
+<main>
+  <div class="container px-4 py-5">
     <h2 class="pb-2 border-bottom">{{ book.book_name}}</h2>
 
     <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
       <div class="col">
-        <img src="{{ url_for('static', filename='{}'.format(book.image)) }}" class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" alt="book_image">
-        <!-- <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg" style="background-image: url('{{ url_for('static', filename='{}'.format(book.image)) }}');">
-          <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-            <ul class="d-flex list-unstyled mt-auto">
-
-              <li class="d-flex align-items-center me-3">
-                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-                <small>Earth</small>
-              </li>
-              <li class="d-flex align-items-center">
-                <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"/></svg>
-                <small>3d</small>
-              </li>
-            </ul>
-          </div>
-        </div> -->
+        <img src="{{ url_for('static', filename='{}'.format(book.image)) }}"
+          class="card card-cover overflow-hidden text-white bg-dark rounded-5 shadow-lg" alt="book_image">
+      </div>
+      <div class="col">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">저자</th>
+              <td>{{book.author}}</td>
+            </tr>
+            <tr>
+              <th scope="row">출판사</th>
+              <td>{{book.publisher}}</td>
+            </tr>
+            <tr>
+              <th scope="row">출간일</th>
+              <td>{{book.publication_date}}</td>
+            </tr>
+            <tr>
+              <th scope="row">쪽수</th>
+              <td>{{book.pages}}</td>
+            </tr>
+            <tr>
+              <th scope="row">ISBN13</th>
+              <td>{{book.isbn}}</td>
+            </tr>
+            <tr>
+              <th scope="row">평점</th>
+              <td>{{book.rating}}</td>
+            </tr>
+            <tr>
+              <th scope="row"></th>
+              <td><a href="{{book.link}}">상세 페이지</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    
-    <div>
-        <div class="col">
-            <ul>
-                <li>{{book.author}} - {{book.publisher}}</li>
-                <li>{{book.publication_date}}</li>
-                <li>{{book.pages}}</li>
-                <li><a href="{{book.link}}">상세 페이지</a></li>
-            </ul>
-        </div>
-    </div>
-<p>책 설명: {{book.description}}</p>
 
-</div>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a id="desc-btn" class="nav-link active" aria-current="page" href="#" onclick="showDesc()">책 소개</a>
+      </li>
+      <li class="nav-item">
+        <a id="review-btn"class="nav-link" href="#" onclick="showReview()">리뷰/한줄평</a>
+      </li>
+    </ul>
+
+
+    <div id="book-description" class="mt-4">
+      <p>{{book.description}}</p>
+    </div>
+
+    <div id="book-review"  class="mt-4">
+      <p>리으뷰리으뷰</p>
+    </div>
+
+  </div>
+</main>
 {% endblock %}
