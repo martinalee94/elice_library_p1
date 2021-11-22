@@ -128,6 +128,15 @@
             }
         })
     }
+
+    function curPage(event, page){
+        event.preventDefault();
+        $.ajax({
+            url: `/home/?pageNumber=${page}`,
+            type: 'GET',
+        })
+        window.location.href = `/home/?pageNumber=${page}`;
+    }
 </script>
 {% endblock %}
 
@@ -152,7 +161,7 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1>Elice Library Book List</h1>
                 <p class="lead">엘리스 도서관 책 목록 및 대여 현황</p>
-                <p class="lead">현재 남은 책: {{count}}권</p>
+                <p class="lead">현재 남은 책: {{cur_count}}권</p>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
                     <div class="input-group">
                         <input id='keyword' type="search" class="form-control form-control-dark" placeholder="Search..."
@@ -160,7 +169,6 @@
                         <button type="button" class="btn btn-dark" onClick="bookSearch()">검색</button>
                     </div>
                 </form>
-                <!--<a href="#" class="btn btn-secondary my-2">Secondary action</a>-->
                 </p>
             </div>
         </div>
@@ -179,7 +187,7 @@
                             width="40%" style="margin-right: auto; margin-left: auto;" height="180" alt="book_image">
 
                         <div class="card-body">
-                            <p id="book-title"><a href="/books/detail/{{book.isbn}}">{{ book.book_name}}</a></p>
+                            <p id="book-title"><a href="/books/detail/{{book.id}}">{{ book.book_name}}</a></p>
                             <p>{{book.author}} - {{book.publisher}}</p>
                             <p>{{book.stock}}권 남음</p>
                             
@@ -218,11 +226,15 @@
         <li class="page-item disabled">
             <a class="page-link">Previous</a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        {% for p in range(1, total_page+1) %}
+        <li class="page-item">
+            <a class="page-link" href="#" onClick="curPage(event, {{p}})">{{p}}</a>
+        </li>
+        {% endfor %}
         <li class="page-item active" aria-current="page">
             <a class="page-link" href="#">2</a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
+
         <li class="page-item">
             <a class="page-link" href="#">Next</a>
         </li>

@@ -2,14 +2,20 @@ from flask import Flask, Blueprint, render_template, jsonify, session, request, 
 from app import db
 from app.models import Users, Books, Rent, Rating
 from sqlalchemy.sql import func
+import math
 
 bp = Blueprint("main", __name__, url_prefix="/home")
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET','POST'])
 def home():
     if request.method == 'GET':
-        count = db.session.query(db.func.sum(Books.stock)).first()[0]
+        page = request.args.get('pageNumber')
+        page = 1 if not page else 8 * (int(page) - 1) + 1
+
+        cur_count = db.session.query(db.func.sum(Books.stock)).first()[0]
         book_list = Books.query.all()
+        book_count = len(book_list)
+        total_page = math.ceil(book_count / 8)
         sum_list = db.session.query(Rating.book_id, func.sum(Rating.point)).group_by(Rating.book_id).all()
         count_list = db.session.query(Rating.book_id, func.count(Rating.book_id)).group_by(Rating.book_id).all()
 
@@ -18,7 +24,8 @@ def home():
             book.rating = round(int(s[1]) / int(c[1]))
             db.session.commit()
 
-        return render_template('home.html', book_list = book_list, count = count)                       
+        book_list = book_list[page:page+8]
+        return render_template('home.html', book_list = book_list, cur_count = cur_count, book_count = book_count, total_page = total_page)                       
 
     elif request.method == 'POST':
         if session.get('login') is not None:
@@ -43,6 +50,7 @@ def home():
         else:
             return jsonify({'result':'no session'})
 
+
 @bp.route('/search/', methods=['GET'])
 def search():
     if request.method == 'GET':
@@ -52,7 +60,4 @@ def search():
         elif keyword is not None:
             book_selection = Books.query.filter(Books.book_name.like(f"%{keyword}%")).all()
             count = len(book_selection)
-            for b in book_selection:
-                print(b.id, b.author, b.book_name)
-            print(count)
             return render_template('home.html', book_list = book_selection, count = count)
