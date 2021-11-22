@@ -32,7 +32,7 @@ def create_app():
 
     @app.route('/')
     def welcome():
-        return redirect('/home')
+        return redirect('/home/')
 
     return app
 
