@@ -8,24 +8,71 @@
   #book-review{
     display: none;
   }
-
+  #review-text{
+    resize : none;
+  }
 </style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  function showDesc(){
+  function showDesc(event){
+    event.preventDefault();
     $('#book-description').show();
     $('#review-btn').removeClass('active');
     $('#book-review').hide();
     $('#desc-btn').addClass('active');
   }
-  function showReview(){
+  function showReview(event){
+    event.preventDefault();
     $('#book-review').show();
     $('#review-btn').addClass('active')
     $('#book-description').hide();
     $('#desc-btn').removeClass('active')
 
+  }
+
+  function postReview(event, book_id){
+    event.preventDefault();
+    review_text = $('#review-text').val()
+    review_rating = $('#review-rating').val()
+    
+    $.ajax({
+      url:'/books/detail/<id>',
+      type:'post',
+      data:{
+        'review': review_text,
+        'rating': '3',
+        'book_id': book_id,
+      },
+      success:function(res){
+        if(res['result'] === 'no session'){
+          alert('로그인이 필요한 서비스입니다.')
+        } else if(res['result'] === 'duplicated'){
+          alert('기존 리뷰를 삭제해 주세요.')
+        } else if(res['result'] === 'success')
+          window.location.reload();
+      }
+    })
+  }
+
+  function deleteReview(event, book_id){
+    event.preventDefault();
+    $.ajax({
+      url:'/books/detail/<id>',
+      type:'post',
+      data:{
+        'book_id': book_id,
+      },
+      success:function(res){
+        if(res['result'] === 'no session'){
+          alert('로그인이 필요한 서비스입니다.')
+        } else if(res['result'] === 'duplicated'){
+          alert('기존 리뷰를 삭제해 주세요.')
+        } else if(res['result'] === 'success')
+          window.location.reload();
+      }
+    })     
   }
 </script>
 {% endblock %}
@@ -78,10 +125,10 @@
 
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a id="desc-btn" class="nav-link active" aria-current="page" href="#" onclick="showDesc()">책 소개</a>
+        <a id="desc-btn" class="nav-link active" aria-current="page" href="#" onclick="showDesc(event)">책 소개</a>
       </li>
       <li class="nav-item">
-        <a id="review-btn"class="nav-link" href="#" onclick="showReview()">리뷰/한줄평</a>
+        <a id="review-btn"class="nav-link" href="#" onclick="showReview(event)">리뷰/한줄평</a>
       </li>
     </ul>
 
@@ -91,7 +138,41 @@
     </div>
 
     <div id="book-review"  class="mt-4">
-      <p>리으뷰리으뷰</p>
+      <p>한줄평 남기기</p>
+      <form action="" method='POST'>
+        <div class="input-group mb-3">
+          <textarea class="form-control" id="review-text" rows="3"></textarea>
+          <button class="btn btn-secondary" type="button" id="review-register" onclick="postReview(event, {{book_id}})">등록</button>
+        </div>
+      </form>
+
+      
+      <div class="containter py-5">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          {% for review in review_list %}
+                <div class="col">
+                  <div class="card h-100">
+                    <div class="card-header">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge rounded-pill bg-warning text-dark">{{ review[1].name }} 님</span>
+                        <div>
+                          <small> {{review[0].created_date.strftime("%Y-%m-%d")}} </small>
+                          {% if review[1].id == session.get('login') %}
+                            <a href="#" class="btn btn-close" onclick="deleteReview(event, {{book_id}})"></a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card-body">
+                      <!-- <h5 class="card-title">"재미있어요!"</h5> -->
+                      <p class="card-text">{{ review[0].description }}.</p>
+                    </div>
+                  </div>
+                </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
   </div>
