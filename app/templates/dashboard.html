@@ -52,7 +52,7 @@
                 <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
                 <div class="card-body">
-                <p id="book-title"><a href="/books/detail/{{book[1].isbn}}">{{book[1].book_name}}</a></p>
+                <p id="book-title"><a href="/books/detail/{{book[1].id}}">{{book[1].book_name}}</a></p>
                 <p>{{book[1].author}} - {{book[1].publisher}}</p>
                 <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
                 </div>
@@ -87,7 +87,7 @@
                 <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
                 <div class="card-body">
-                <p id="book-title"><a href="/books/detail/{{book[1].isbn}}">{{ book[1].book_name}}</a></p>
+                <p id="book-title"><a href="/books/detail/{{book[1].id}}">{{ book[1].book_name}}</a></p>
                 <p>{{book[1].author}} - {{book[1].publisher}}</p>
                 <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
                 </div>
