@@ -10,7 +10,7 @@ bp = Blueprint("main", __name__, url_prefix="/home")
 def home():
     if request.method == 'GET':
         page = request.args.get('pageNumber')
-        page = 1 if not page else 8 * (int(page) - 1) + 1
+        page = 0 if not page else 8 * (int(page) - 1)
 
         cur_count = db.session.query(db.func.sum(Books.stock)).first()[0]
         book_list = Books.query.all()
@@ -25,6 +25,7 @@ def home():
             db.session.commit()
 
         book_list = book_list[page:page+8]
+        #return jsonify(book_list = book_list, cur_count = cur_count, book_count = book_count, total_page = total_page)
         return render_template('home.html', book_list = book_list, cur_count = cur_count, book_count = book_count, total_page = total_page)                       
 
     elif request.method == 'POST':
