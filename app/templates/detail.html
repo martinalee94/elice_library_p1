@@ -84,7 +84,7 @@
     event.preventDefault();
     let review_text = $('#review-text').val()
     let star_rating =$("#star-rating input[type=radio]:checked").val()
-
+    
     $.ajax({
       url:'/books/detail/<id>',
       type:'POST',
@@ -101,7 +101,7 @@
         } else if(res['result'] === 'empty form'){
           alert('평점/리뷰를 모두 작성해 주세요.')
         } else {
-          let member_id = sessionStorage.getItem('login')
+          let member_id = {{ session['login'] }}
           review_body = document.querySelector('#review-body');
           review_body.innerHTML = '';
           res.review_list.forEach(review => {
@@ -122,7 +122,7 @@
 
             if (review.user_id == member_id){
               review_card += `
-                <a href="#" class="btn btn-close" onclick="deleteReview(event, ${review_book_id})"></a>
+                <a href="#" class="btn btn-close" onclick="deleteReview(event, ${review.book_id})"></a>
               `
             }
             review_card +=`
@@ -136,7 +136,6 @@
                   </div>
                 </div>
             `
-            console.log(review_card)
             review_body.innerHTML += review_card
           });
         }
@@ -158,7 +157,8 @@
         } else if(res['result'] === 'fail') {
           alert('다시 시도해 주세요.')
         } else{
-          let member_id = sessionStorage.getItem('login')
+          let member_id = {{session['login']}}
+          console.log('member_id',member_id)
           review_body = document.querySelector('#review-body');
           review_body.innerHTML = '';
           res.review_list.forEach(review => {
@@ -177,11 +177,12 @@
                           <small> ${review.created_date} </small>
             `;
 
-            if (review.user_id == member_id){
-              review_card += `
+            if(member_id == review.user_id){
+            review_card += `
                 <a href="#" class="btn btn-close" onclick="deleteReview(event, ${review_book_id})"></a>
               `
             }
+
             review_card +=`
                         </div>
                       </div>
@@ -193,7 +194,6 @@
                   </div>
                 </div>
             `
-            console.log(review_card)
             review_body.innerHTML += review_card
           });
         }
