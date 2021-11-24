@@ -1,7 +1,9 @@
 from flask import Flask, Blueprint, render_template, jsonify, session, request, g, redirect, url_for
+from sqlalchemy.exc import IntegrityError
 from app import db
 from app.models import Users, Books, Rating
 import requests
+#from pymysql.err import IntegrityError
 
 bp = Blueprint("detail", __name__, url_prefix="/books/detail")
 
@@ -12,6 +14,9 @@ def detail(id):
         book = Books.query.filter(Books.id == id).first()
         #rating_list = Rating.query.filter(Rating.book_id == id).all()
         review_list = db.session.query(Rating, Users).filter(Rating.user_id == Users.id).filter(Rating.book_id == id).order_by(Rating.created_date.desc()).all()
+        print(*review_list)
+        for p in review_list:
+            print(dir(p))
         return render_template('detail.html', book = book, review_list= review_list, book_id = id)
     elif request.method == 'POST':
         if session.get('login') is None:
@@ -51,11 +56,14 @@ def detail(id):
                             'user_name': user_name,
                             'book_id':r.book_id, 
                             'created_date':r.created_date.strftime("%Y-%m-%d"), 
-                            'description': r.description}
-                        )
+                            'description': r.description,
+                            'rating':r.point
+                        })
                 return jsonify(review_list = review_list)
-            except:
+            except IntegrityError as e: 
                 return jsonify({'result':'duplicated'})
+            except:
+                return jsonify({'result':'empty form'})
  
     elif request.method == 'DELETE':
         if session.get('login') is None:
@@ -91,5 +99,5 @@ def detail(id):
                             'description': r.description}
                         )
                 return jsonify(review_list = review_list)
-            except:
+            except Exception as e:
                 return jsonify({'result':'fail'})

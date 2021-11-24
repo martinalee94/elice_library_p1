@@ -11,6 +11,54 @@
   #review-text{
     resize : none;
   }
+
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+.review-wrap{
+  display:flex;
+}
+.review-title{
+  margin-bottom:0; 
+  padding-top:0.5rem;
+  font-size: large;
+  font-weight:bold;
+}
+/****** Style Star Rating Widget *****/
+
+#star-rating { 
+  border: none;
+  float: left;
+}
+
+.rating > input { display: none; } 
+.rating > label:before { 
+  margin: 5px;
+  font-size: 1.5em;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "✭";
+}
+
+.rating > .half:before { 
+  content: "⭐";
+  position: absolute;
+}
+
+.rating > label { 
+  color: #ddd; 
+  float: right; 
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
 </style>
 {% endblock %}
 
@@ -34,15 +82,15 @@
 
   function postReview(event, book_id){
     event.preventDefault();
-    review_text = $('#review-text').val()
-    review_rating = $('#review-rating').val()
-    
+    let review_text = $('#review-text').val()
+    let star_rating =$("#star-rating input[type=radio]:checked").val()
+
     $.ajax({
       url:'/books/detail/<id>',
-      type:'post',
+      type:'POST',
       data:{
         'review': review_text,
-        'rating': '3',
+        'rating': star_rating,
         'book_id': book_id,
       },
       success:function(res){
@@ -50,17 +98,24 @@
           alert('로그인이 필요한 서비스입니다.')
         } else if(res['result'] === 'duplicated'){
           alert('기존 리뷰를 삭제해 주세요.')
+        } else if(res['result'] === 'empty form'){
+          alert('평점/리뷰를 모두 작성해 주세요.')
         } else {
           let member_id = sessionStorage.getItem('login')
           review_body = document.querySelector('#review-body');
           review_body.innerHTML = '';
           res.review_list.forEach(review => {
+            star_count =''
+            for(let i = 0; i < review.rating; i++){
+              star_count += '⭐'
+            }
             review_card = `
             <div class="col">
                   <div class="card h-100">
                     <div class="card-header">
                       <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge rounded-pill bg-warning text-dark">${ review.user_name } 님</span>
+                        <span class="badge rounded-pill bg-warning text-dark">${ review.user_name } 님 </span>
+                        ${star_count}
                         <div>
                           <small> ${review.created_date} </small>
             `;
@@ -76,7 +131,7 @@
                     </div>
 
                     <div class="card-body">
-                      <p class="card-text">${ review.description }.</p>
+                      <p class="card-text">${ review.description }</p>
                     </div>
                   </div>
                 </div>
@@ -107,12 +162,17 @@
           review_body = document.querySelector('#review-body');
           review_body.innerHTML = '';
           res.review_list.forEach(review => {
+            star_count =''
+            for(let i = 0; i < review.rating; i++){
+              star_count += '⭐'
+            }
             review_card = `
             <div class="col">
                   <div class="card h-100">
                     <div class="card-header">
                       <div class="d-flex justify-content-between align-items-center">
                         <span class="badge rounded-pill bg-warning text-dark">${ review.user_name } 님</span>
+                        ${star_count}
                         <div>
                           <small> ${review.created_date} </small>
             `;
@@ -205,8 +265,18 @@
     </div>
 
     <div id="book-review"  class="mt-4">
-      <p>한줄평 남기기</p>
+      <div class="review-wrap">
+        <p class="review-title">한줄평 남기기</p>
+      </div>
       <form action="" method='POST'>
+        <fieldset id='star-rating' class='rating'>
+          <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="정말 최고에요!"></label>
+          <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="좋아요"></label>
+          <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="괜찮아요"></label>
+          <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="아쉬웠어요"></label>
+          <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="별로에요"></label>
+        </fieldset>
+
         <div class="input-group mb-3">
           <textarea class="form-control" id="review-text" rows="3"></textarea>
           <button class="btn btn-secondary" type="button" id="review-register" onclick="postReview(event, '{{book_id}}')">등록</button>
@@ -222,6 +292,10 @@
                     <div class="card-header">
                       <div class="d-flex justify-content-between align-items-center">
                         <span class="badge rounded-pill bg-warning text-dark">{{ review[1].name }} 님</span>
+
+                        {% for i in range(review[0].point) %}
+                        ⭐
+                        {% endfor %}
                         <div>
                           <small> {{review[0].created_date.strftime("%Y-%m-%d")}} </small>
                           {% if review[1].id == session.get('login') %}
@@ -241,6 +315,9 @@
         </div>
       </div>
     </div>
+
+
+
 
   </div>
 </main>

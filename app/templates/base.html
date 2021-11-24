@@ -75,6 +75,7 @@
  
           <div class="text-end">
             {%if session['login'] %}
+              <span class="badge bg-warning text-dark">{{ g.user.name }} 님 </span>
               <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/logout'">Logout</button>
             {% else %}
               <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/login'">Login</button>
