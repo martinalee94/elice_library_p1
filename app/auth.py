@@ -48,24 +48,24 @@ def logout():
 @bp.route('/signup', methods=['POST', 'GET'])
 def signup():
     if session.get('login') is None:
-        regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+[.]?\w{2,3}$'
+        name_regex = r'^[가-힣a-zA-Z]{2,10}$'
+        email_regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+[.]?\w{2,3}$'
+        pw_regex = r'^(?!.* )(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+|<>?:{}])(?=.*[0-9]).{8,16}$'
 
         if request.method == 'GET':
             return render_template('signup.html')   
         elif request.method == 'POST':
-            user_id = request.form.get('user_id')
-            user_pw1 = request.form.get('user_pw1')
-            user_pw2 = request.form.get('user_pw2')
-            user_name = request.form.get('user_name')
-            if user_name.find(" ") >= 0:
+            user_id = request.form['user_email']
+            user_pw1 = request.form['user_pw1']
+            user_pw2 = request.form['user_pw2']
+            user_name = request.form['user_name']
+            
+            if not re.search(name_regex, user_name):
                 return jsonify({'result':'check_name'})
-            valid = re.search(regex, user_id)
-            if not valid:
+            if not re.search(email_regex, user_id):
                 return jsonify({'result':'check_email'})
-
-            if len(user_pw1) < 8 or len(user_pw2) < 8:
-                return jsonify({'result':'pw_length'})    
-
+            if not re.search(pw_regex, user_pw1) or not re.search(pw_regex, user_pw2):
+                return jsonify({'result':'check_pw'})    
             if user_pw1 != user_pw2:
                 return jsonify({'result':'check_pw'})
             
