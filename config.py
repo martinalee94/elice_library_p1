@@ -1,0 +1,6 @@
+import os
+
+DB_KEY = os.environ.get('DB_KEY')
+
+SQLALCHEMY_DATABASE_URI = DB_KEY
+SQLALCHEMY_TRACK_MODIFICATIONS = False

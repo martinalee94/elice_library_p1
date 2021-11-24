@@ -1,9 +1,6 @@
 /.libvenv
 /__pycache__
-/migrations
 /app/__pycache__
-/app/static/img
 /.vscode
 
-config.py
 .env
