@@ -1,103 +1,116 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Hugo 0.88.1">
-    <title>Elice Library</title>
 
-    <!-- Google web font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Noto+Sans+KR&display=swap" rel="stylesheet">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.88.1">
+  <title>Elice Library</title>
 
-    <!-- Bootstrap -->
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/album/">
-    <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
-    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+  <!-- Google web font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-    <!-- <script src="{{url_for('static', filename='js/popper.js')}}"></script> -->
-    <script src="{{url_for('static', filename='js/main.js')}}"></script>
+  <!-- Bootstrap -->
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/album/">
+  <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+  <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
-    <style>
-      * {
-        font-family: 'Merriweather', serif;
-        font-family: 'Noto Sans KR', sans-serif;
+  <!-- <script src="{{url_for('static', filename='js/popper.js')}}"></script> -->
+  <script src="{{url_for('static', filename='js/main.js')}}"></script>
+
+  <style>
+    * {
+      font-family: 'Merriweather', serif;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
       }
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
+    }
 
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-      #navbar-brand{
-        text-decoration: none; 
-        color: white;
-      }
-    </style>
-    {% block style %}
-    {% endblock %}
-  </head>
+    #navbar-brand {
+      text-decoration: none;
+      color: white;
+    }
 
-  {% block scripts %}
-
+    #book-title a {
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: black;
+    }
+  </style>
+  {% block style %}
   {% endblock %}
+</head>
 
-  <body>
-    <header class="p-3 bg-dark text-white">
-      <div class="container">
+{% block scripts %}
 
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a class="navbar-brand d-flex align-items-center" id="navbar-brand">
-            <img src=" https://cdn-icons-png.flaticon.com/512/4775/4775505.png" width="30" height="30" alt="elice_image">
-            <strong> Elice Library</strong>
-          </a>
-  
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/home" class="nav-link px-2 text-secondary">Home</a></li>
-            {%if session['login'] %}
-            <li><a href="/dashboard/{{g.user.id}}" class="nav-link px-2 text-white">My Dashboard</a></li>
-            {% endif %}
-            <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-            <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-          </ul>
-  
- 
-          <div class="text-end">
-            {%if session['login'] %}
-              <span class="badge bg-warning text-dark">{{ g.user.name }} 님 </span>
-              <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/logout'">Logout</button>
-            {% else %}
-              <button type="button" class="btn btn-outline-light me-2" onClick="window.location.href = '/user/login'">Login</button>
-              <button type="button" class="btn btn-warning" onClick="window.location.href = '/user/signup'">Sign-up</button>
-            {% endif %}
-          </div>
+{% endblock %}
+
+<body>
+  <header class="p-3 bg-dark text-white">
+    <div class="container">
+
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a class="navbar-brand d-flex align-items-center" id="navbar-brand">
+          <img src=" https://cdn-icons-png.flaticon.com/512/4775/4775505.png" width="30" height="30" alt="elice_image">
+          <strong> Elice Library</strong>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/home" class="nav-link px-2 text-secondary">Home</a></li>
+          {%if session['login'] %}
+          <li><a href="/dashboard/{{g.user.id}}" class="nav-link px-2 text-white">My Dashboard</a></li>
+          {% endif %}
+          <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+          <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+        </ul>
+
+
+        <div class="text-end">
+          {%if session['login'] %}
+          <span class="badge bg-warning text-dark">{{ g.user.name }} 님 </span>
+          <button type="button" class="btn btn-outline-light me-2"
+            onClick="window.location.href = '/user/logout'">Logout</button>
+          {% else %}
+          <button type="button" class="btn btn-outline-light me-2"
+            onClick="window.location.href = '/user/login'">Login</button>
+          <button type="button" class="btn btn-warning" onClick="window.location.href = '/user/signup'">Sign-up</button>
+          {% endif %}
         </div>
       </div>
-    </header>
-    
-
-    {% block content %}
-    {% endblock %}
-    
-
-    <footer class="text-muted py-5">
-    <div class="container">
-        <p class="float-end mb-1">
-        <a href="#">Back to top</a>
-        </p>
     </div>
-    </footer>
+  </header>
 
-  </body>
+
+  {% block content %}
+  {% endblock %}
+
+
+  <footer class="text-muted py-5">
+    <div class="container">
+      <p class="float-end mb-1">
+        <a href="#">Back to top</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+
 </html>
