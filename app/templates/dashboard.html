@@ -1,21 +1,26 @@
 {% extends 'base.html' %}
 {% block style %}
+<style>
+    .card-footer ul {
+        list-style: none;
+    }
+</style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-   function returnBook(id){
+    function returnBook(id) {
         book_id = id
         $.ajax({
-            url:'/dashboard/{{g.user.id}}',
-            type:'POST',
-            data:{
-                'book_id':book_id
+            url: '/dashboard/{{g.user.id}}',
+            type: 'POST',
+            data: {
+                'book_id': book_id
             },
-            success:function(res){
-                if(res['result'] === 'success'){
+            success: function (res) {
+                if (res['result'] === 'success') {
                     alert('반납성공')
-                } else{
+                } else {
                     alert('잠시 후에 다시 시도해 주세요.')
                 }
                 window.location.reload(true)
@@ -29,74 +34,93 @@
 {% block content %}
 
 <main>
-    <section class="py-1 text-center container">
-        <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-light">나의 대여 현황</h1>
-            <p class="lead text-muted">현재 대여 중인 책: {{cur_count}}권</p>
-            <p class="lead text-muted">총 대여 내역: {{total_count}}권</p>
+    <div class="container py-4">
+        <div class="p-2 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-8 fw-bold">My Dashboard</h1>
+                <p class="col-md-8 fs-4">대여 현황: {{cur_count}}권</p>
+                <p class="col-md-8 fs-4">대여 이력: 총 {{total_count}}권</p>
+            </div>
         </div>
-        </div>
-    </section>
-    
-    <div class="container px-4 py-5" id="custom-cards">
-        <h2 class="pb-2 border-bottom">대여 중</h2>
-    </div>
 
-    <div class="album py-5 bg-light">
-        <div class="container">
+        <div class="container px-4 py-5" id="custom-cards">
+            <h2 class="pb-2 border-bottom">대여 현황</h2>
+        </div>
+
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            {% if cur_count != 0 %}
             {% for book in book_list%}
             <div class="col">
-            <div class="card shadow-sm h-100">
-                <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+                <div class="card shadow-sm h-100">
+                    <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img"
+                        width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
-                <div class="card-body">
-                <p id="book-title"><a href="/books/detail/{{book[1].id}}">{{book[1].book_name}}</a></p>
-                <p>{{book[1].author}} - {{book[1].publisher}}</p>
-                <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
-                </div>
+                    <div class="card-body">
+                        <h5 id="book-title" class="card-title"><a
+                                href="/books/detail/{{book[1].id}}">{{book[1].book_name}}</a></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{book[1].author}} - {{book[1].publisher}}</h6>
+                        <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}
+                        </p>
+                    </div>
 
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onClick="returnBook('{{book[1].id}}')">반납하기</button>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                    onClick="returnBook('{{book[1].id}}')">반납하기</button>
+                            </div>
+                            {% if book[0].return_date.strftime("%Y-%m-%d") < today %} <span
+                                class="badge rounded-pill bg-danger">연체중</span>
+                                {% endif %}
                         </div>
-                        {% if book[0].return_date.strftime("%Y-%m-%d") < today %}
-                            <span class="badge rounded-pill bg-danger">연체중</span>
-                        {% endif %}
                     </div>
                 </div>
             </div>
-            </div>
             {% endfor %}
+            {% else %}
+            <p>"대출 중인 목록이 없습니다."</p>
+            {% endif %}
         </div>
+
+
+        <div class="container px-4 py-5" id="custom-cards">
+            <h2 class="pb-2 border-bottom">대여 이력</h2>
         </div>
-    </div>
 
-    <div class="container px-4 py-5" id="custom-cards">
-        <h2 class="pb-2 border-bottom">대여 기록</h2>
-    </div>
-
-    <div class="album py-5 bg-light">
-        <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            {% if total_count != 0 %}
             {% for book in history%}
             <div class="col">
-            <div class="card shadow-sm h-100">
-                <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img" width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
+                <div class="card shadow-sm h-100">
+                    <img src="{{ url_for('static', filename='{}'.format(book[1].image)) }}" class="bd-placeholder-img"
+                        width="50%" style="margin-right: auto; margin-left: auto;" height="225" alt="book_image">
 
-                <div class="card-body">
-                <p id="book-title"><a href="/books/detail/{{book[1].id}}">{{ book[1].book_name}}</a></p>
-                <p>{{book[1].author}} - {{book[1].publisher}}</p>
-                <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}} - {{book[0].return_date.strftime("%Y-%m-%d")}}</p>
+                    <div class="card-body">
+                        <h5 id="book-title" class="card-title"><a href="/books/detail/{{book[1].id}}">{{
+                                book[1].book_name}}</a></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{book[1].author}} - {{book[1].publisher}}</h6>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-secondary">대출일자</span>
+                                <p>{{book[0].checkout_date.strftime("%Y-%m-%d")}}</p>
+                            </div>
+                            <div>
+                                <span class="badge bg-secondary">반납일</span>
+                                <p>{{book[0].return_date.strftime("%Y-%m-%d")}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
             </div>
             {% endfor %}
-        </div>
+            {% else %}
+            <p>"대여 이력이 없습니다."</p>
+            {% endif %}
         </div>
     </div>
-
-    </main>
+</main>
 {% endblock %}

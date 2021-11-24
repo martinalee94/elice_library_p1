@@ -10,10 +10,10 @@ bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 def dashboard(id):
     if request.method == 'GET':
         # if g.user is None:
-        #     msg ='로그인이 필요한 서비스입니다.'
-        #     flash(msg)
-        #     return redirect('/home')
-        #else:
+        #      msg ='로그인이 필요한 서비스입니다.'
+        #      flash(msg)
+        #      return redirect('/home')
+        
         
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         rent_list = db.session.query(Rent, Books).filter(Rent.book_id == Books.id).filter(Rent.user_id == session.get('login')).filter(Rent.status == 1).all()
@@ -24,7 +24,6 @@ def dashboard(id):
         if len(history) == 0: #대여 이력이 없을때
             return render_template('dashboard.html', cur_count = 0, total_count = 0 )
 
-        #cur_list = db.session.query(func.count(Rent.user_id)).filter(Rent.user_id == session.get('login')).all()
         cur_count = len(rent_list)
         total_count = db.session.query(func.count(Rent.user_id)).group_by(Rent.user_id).having(Rent.user_id == session.get('login')).first()[0]
         return render_template('dashboard.html', book_list = rent_list, cur_count = cur_count, total_count = total_count, history = history, today= today )
@@ -38,6 +37,7 @@ def dashboard(id):
         for rent in rented_book:
             if rent.book_id == book_id:
                 rent.status = 0
+                rent.return_date = datetime.datetime.now()
                 db.session.commit()
                 break
         
