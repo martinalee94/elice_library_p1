@@ -13,7 +13,7 @@ def detail(id):
     if request.method == 'GET':
         book = Books.query.filter(Books.id == id).first()
         #rating_list = Rating.query.filter(Rating.book_id == id).all()
-        review_list = db.session.query(Rating, Users).filter(Rating.user_id == Users.id).filter(Rating.book_id == id).order_by(Rating.created_date.desc()).all()
+        review_list = db.session.query(Rating, Users).filter((Rating.user_id == Users.id) & (Rating.book_id == id)).order_by(Rating.created_date.desc()).all()
         return render_template('detail.html', book = book, review_list= review_list, book_id = id)
     elif request.method == 'POST':
         if session.get('login') is None:
