@@ -30,6 +30,9 @@ def create_app():
     from . import dashboard
     app.register_blueprint(dashboard.bp)
 
+    from .tests import error_handler
+    app.register_blueprint(error_handler.bp)
+
     @app.route('/')
     def welcome():
         return redirect('/home/')

@@ -1,6 +1,7 @@
 /.libvenv
 /__pycache__
 /app/__pycache__
+/app/tests/__pycache__
 /.vscode
-
+/.loaddata.py
 .env

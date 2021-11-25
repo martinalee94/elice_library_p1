@@ -158,7 +158,6 @@
           alert('다시 시도해 주세요.')
         } else{
           let member_id = {{session['login']}}
-          console.log('member_id',member_id)
           review_body = document.querySelector('#review-body');
           review_body.innerHTML = '';
           res.review_list.forEach(review => {
