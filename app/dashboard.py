@@ -16,11 +16,11 @@ def dashboard(id):
         
         
         today = datetime.datetime.now().strftime("%Y-%m-%d")
-        rent_list = db.session.query(Rent, Books).filter(Rent.book_id == Books.id).filter(Rent.user_id == session.get('login')).filter(Rent.status == 1).all()
+        rent_list = db.session.query(Rent, Books).filter((Rent.book_id == Books.id) & (Rent.user_id == session.get('login')) & (Rent.status == 1)).all()
         
         #이렇게 조인을 하면, 첫번째는 Rent객체, 두번쨰는 Books 객체가 결과값으로 반환된다
-        history = db.session.query(Rent, Books).filter(Rent.book_id == Books.id).filter(Rent.user_id == session.get('login')).all()
-
+        history = db.session.query(Rent, Books).filter((Rent.book_id == Books.id) & (Rent.user_id == session.get('login'))).all()
+        
         if len(history) == 0: #대여 이력이 없을때
             return render_template('dashboard.html', cur_count = 0, total_count = 0 )
 
