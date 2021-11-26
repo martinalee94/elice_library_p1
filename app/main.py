@@ -10,13 +10,15 @@ bp = Blueprint("main", __name__, url_prefix="/home")
 def home():
     if request.method == 'GET':
         page = request.args.get('pageNumber')
-        page = 0 if not page else 8 * (int(page) - 1)
+        #책 리스트 인덱스 번호 구하는 것 / pageNumber가 없는 get요청은 0으로 설정
+        page = 0 if not page else 8 * (int(page) - 1) 
+
         cur_count = db.session.query(db.func.sum(Books.stock)).first()[0]
         book_list = Books.query.all()
         book_count = len(book_list)
         total_page = math.ceil(book_count / 8)
 
-        if page > total_page:
+        if page >= book_count:
             abort(404)
             
         sum_list = db.session.query(Rating.book_id, func.sum(Rating.point)).group_by(Rating.book_id).all()
