@@ -45,16 +45,14 @@ def logout():
     session.clear()
     return redirect('/home')
 
-@bp.route('/signup', methods=['POST', 'GET'])
+@bp.route('/signup', methods=['POST','GET'])
 def signup():
     if session.get('login') is None:
         name_regex = r'^[가-힣a-zA-Z]{2,10}$'
         email_regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+[.]?\w{2,3}$'
         pw_regex = r'^(?!.* )(?=.*[a-zA-Z])(?=.*[~!@#$%^&*()_+|<>?:{}])(?=.*[0-9]).{8,16}$'
 
-        if request.method == 'GET':
-            return render_template('signup.html')   
-        elif request.method == 'POST':
+        if request.method == 'POST':
             user_id = request.form['user_email']
             user_pw1 = request.form['user_pw1']
             user_pw2 = request.form['user_pw2']
@@ -79,6 +77,7 @@ def signup():
                 db.session.add(user)
                 db.session.commit()
                 return jsonify({'result':'success'})
+        return render_template('signup.html')   
     else:
         return redirect('/home')
             

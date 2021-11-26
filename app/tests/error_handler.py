@@ -15,7 +15,7 @@ Usually happens on programming errors or if the server is overloaded. A terribly
 @bp.app_errorhandler(403)
 #Forbidden
 #If you have some kind of access control on your website, you will have to send a 403 code for disallowed resources. So make sure the user is not lost when they try to access a forbidden resource.
-def page_not_found(e):
+def forbidden(e):
     return render_template('error.html', error_msg = e), 403
 
 @bp.app_errorhandler(404)
@@ -29,9 +29,18 @@ def page_not_found(e):
 def method_not_allowed(e):
     return render_template('error.html', error_msg = e), 405
 
+@bp.app_errorhandler(408)
+#request timeout
+def request_timeout(e):
+    return render_template('error.html', error_msg = e), 408
+
 @bp.app_errorhandler(500)
 #Internal Server Error
 #Usually happens on programming errors or if the server is overloaded. A terribly good idea is to have a nice page there, because your application will fail sooner or later (see also: Application Errors).
 def internal_server(e):
+    return render_template('error.html', error_msg = e), 500
+
+@bp.app_errorhandler(ValueError)
+def value_error(e):
     return render_template('error.html', error_msg = e), 500
 

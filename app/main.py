@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, jsonify, session, request, g, redirect, url_for
+from flask import Flask, Blueprint, render_template, jsonify, session, request, g, redirect, url_for, abort
 from app import db
 from app.models import Users, Books, Rent, Rating
 from sqlalchemy.sql import func
@@ -11,11 +11,14 @@ def home():
     if request.method == 'GET':
         page = request.args.get('pageNumber')
         page = 0 if not page else 8 * (int(page) - 1)
-
         cur_count = db.session.query(db.func.sum(Books.stock)).first()[0]
         book_list = Books.query.all()
         book_count = len(book_list)
         total_page = math.ceil(book_count / 8)
+
+        if page > total_page:
+            abort(404)
+            
         sum_list = db.session.query(Rating.book_id, func.sum(Rating.point)).group_by(Rating.book_id).all()
         count_list = db.session.query(Rating.book_id, func.count(Rating.book_id)).group_by(Rating.book_id).all()
 
@@ -56,9 +59,25 @@ def home():
 def search():
     if request.method == 'GET':
         keyword = request.args.get('keyword')
+        '''
         if keyword == "":
             return jsonify({'result':'no keyword'})
         elif keyword is not None:
             book_selection = Books.query.filter(Books.book_name.like(f"%{keyword}%")).all()
             count = len(book_selection)
-            return render_template('home.html', book_list = book_selection, count = count)
+
+            cur_count = db.session.query(db.func.sum(Books.stock)).first()[0]
+            book_list = Books.query.all()
+            book_count = len(book_list)
+            total_page = math.ceil(book_count / 8)
+            sum_list = db.session.query(Rating.book_id, func.sum(Rating.point)).group_by(Rating.book_id).all()
+            count_list = db.session.query(Rating.book_id, func.count(Rating.book_id)).group_by(Rating.book_id).all()
+
+            for s, c in zip(sum_list, count_list):
+                book = Books.query.filter(Books.id == int(s[0])).first()
+                book.rating = round(int(s[1]) / int(c[1]))
+                db.session.commit()
+
+            book_list = book_list[page:page+8]            
+            return render_template('home.html', book_list = book_selection, cur_count = cur_count, book_count = book_count, total_page = total_page)
+            '''
