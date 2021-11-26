@@ -12,7 +12,6 @@ bp = Blueprint("detail", __name__, url_prefix="/books/detail")
 def detail(id):
     if request.method == 'GET':
         book = Books.query.filter(Books.id == id).first()
-        #rating_list = Rating.query.filter(Rating.book_id == id).all()
         review_list = db.session.query(Rating, Users).filter((Rating.user_id == Users.id) & (Rating.book_id == id)).order_by(Rating.created_date.desc()).all()
         return render_template('detail.html', book = book, review_list= review_list, book_id = id)
     elif request.method == 'POST':
@@ -29,9 +28,6 @@ def detail(id):
                 db.session.commit()
 
                 book = Books.query.filter(Books.id == book_id).first()
-                #review_list = db.session.query(Rating, Users).filter(Rating.user_id == Users.id).filter(Rating.book_id == book_id).order_by(Rating.created_date.desc()).all()
-                #review_try1 = db.session.query(Rating).join(Users, Rating.user_id == Users.id).all()
-                #review_try2 = db.session.query(Rating).join(Users).all()
                 review_db = Rating.query.order_by(Rating.created_date.desc()).all()
                 user_db = Users.query.all()
                 
@@ -59,7 +55,8 @@ def detail(id):
                 return jsonify(review_list = review_list)
             except IntegrityError as e: 
                 return jsonify({'result':'duplicated'})
-            except:
+            except Exception as e :
+                print(e)
                 return jsonify({'result':'empty form'})
  
     elif request.method == 'DELETE':
@@ -93,7 +90,8 @@ def detail(id):
                             'user_name': user_name,
                             'book_id':r.book_id, 
                             'created_date':r.created_date.strftime("%Y-%m-%d"), 
-                            'description': r.description}
+                            'description': r.description,
+                            'rating':r.point}
                         )
                 return jsonify(review_list = review_list)
             except Exception as e:
