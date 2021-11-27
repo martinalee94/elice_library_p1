@@ -1,6 +1,6 @@
 # elice_library_p1
 
-# - 엘리스 도서관 대출 서비스 개발 마일스톤 일정 :thinking:
+# - 엘리스 도서관 대출 서비스 개발 Milestone :thinking:
 
   - DB설계 및 페이지 별 DRAFT 구성(~11/18 목) :ballot_box_with_check: 
   - 로그인/로그아웃/회원가입 기능 개발(11/19 금) :ballot_box_with_check: 
@@ -15,7 +15,7 @@
 <br>
 <br>
 
-<details><summary>프로젝트 구조 한눈에 살펴보기</summary>
+<details><summary>프로젝트 구조 한 눈에 살펴보기</summary>
 
 ```
 ├── app/

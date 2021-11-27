@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
-{% with msg = get_flashed_messages() %}
-{% if msg %}
-<script>
-    alert('{{msg[0]}}')
-</script>
-{% endif %}
-{% endwith %}
+
+<!-- {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <script>
+        $(document).ready(() =>{
+            console.log('{{messages[0]}}')
+            alert('{{messages[0]}}')
+        })
+
+        function login_required(){
+            alert('{{messages[0]}}')
+        }
+        window.onload = login_required();
+    </script>
+    {% endif %}
+{% endwith %} -->
 
 {% block style %}
 <style>

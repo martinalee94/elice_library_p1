@@ -9,11 +9,11 @@ bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 @bp.route('/<id>', methods=['GET', 'POST'])
 def dashboard(id):
     if request.method == 'GET':
-        # if g.user is None:
-        #      msg ='로그인이 필요한 서비스입니다.'
-        #      flash(msg)
-        #      return redirect('/home')
-        
+        if session.get('login') is None:
+             msg ='로그인이 필요한 서비스입니다.'
+             flash(msg)
+             return redirect(url_for('main.home'))
+
         
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         rent_list = db.session.query(Rent, Books).filter((Rent.book_id == Books.id) & (Rent.user_id == session.get('login')) & (Rent.status == 1)).all()
