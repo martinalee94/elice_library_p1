@@ -1,25 +1,5 @@
 # elice_library_p1
 
-
-```
-├── app/
-│      ├─ __init__.py
-│      ├─ models.py
-│      ├─ auth.py
-│      ├─ migrations/
-│      ├─ static/
-│      │   ├─ css/
-│      │   ├─ js/
-│      │   └─ img/
-│      └─ templates/
-│            └─ home.html
-├── .env
-├── .gitignore
-├── config.py
-├── loaddata.py
-└── README.md
-```
-
 # - 엘리스 도서관 대출 서비스 개발 마일스톤 일정 :thinking:
 
   - DB설계 및 페이지 별 DRAFT 구성(~11/18 목) :ballot_box_with_check: 
@@ -34,6 +14,42 @@
 
 <br>
 <br>
+
+<details><summary>프로젝트 구조 한눈에 살펴보기</summary>
+
+```
+├── app/
+│      ├─ __init__.py
+│      ├─ models.py
+│      ├─ main.py
+│      ├─ dashboard.py
+│      ├─ detail.py
+│      ├─ auth.py
+│      ├─ migrations/
+│      ├─ static/
+│      │   ├─ books.json
+│      │   ├─ css/
+│      │   ├─ js/
+│      │   └─ img/
+│      ├─ tests/
+│      │   └─ error_handler.py
+│      └─ templates/
+│            ├─ base.html
+│            ├─ home.html
+│            ├─ dashboard.html
+│            ├─ detail.html
+│            ├─ login.html
+│            ├─ signup.html
+│            └─ error.html
+├── .env
+├── .gitignore
+├── config.py
+├── loaddata.py
+├── requirements.txt
+└── README.md
+```
+
+</details> 
 
 <details><summary>실제 개발 현황 펼쳐보기 :100:</summary>
 
