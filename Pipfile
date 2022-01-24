@@ -1,0 +1,43 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+alembic = "==1.7.5"
+bcrypt = "==3.2.0"
+certifi = "==2021.10.8"
+cffi = "==1.15.0"
+charset-normalizer = "==2.0.7"
+click = "==8.0.3"
+colorama = "==0.4.4"
+greenlet = "==1.1.2"
+idna = "==3.3"
+importlib-metadata = "==4.8.2"
+importlib-resources = "==5.4.0"
+itsdangerous = "==2.0.1"
+pycparser = "==2.21"
+python-dotenv = "==0.19.2"
+requests = "==2.26.0"
+six = "==1.16.0"
+typing-extensions = "==4.0.0"
+urllib3 = "==1.26.7"
+zipp = "==3.6.0"
+Flask = "==2.0.2"
+Flask-Bcrypt = "==0.7.1"
+Flask-Migrate = "==3.1.0"
+Flask-SQLAlchemy = "==2.5.1"
+Jinja2 = "==3.0.3"
+Mako = "==1.1.6"
+MarkupSafe = "==2.0.1"
+PyMySQL = "==1.0.2"
+SQLAlchemy = "==1.4.27"
+Werkzeug = "==2.0.2"
+flake8 = "*"
+black = "*"
+isort = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
