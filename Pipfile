@@ -36,6 +36,7 @@ Werkzeug = "==2.0.2"
 flake8 = "*"
 black = "*"
 isort = "*"
+cryptography = "*"
 
 [dev-packages]
 
