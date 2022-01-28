@@ -7,6 +7,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
     SSL_REDIRECT = False
+    FLASK_ADMIN_SWATCH = "united"
 
     @staticmethod
     def init_app(app):
