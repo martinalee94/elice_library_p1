@@ -14,9 +14,9 @@ class Users(db.Model):
         self.name = name
 
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
-    user_id = db.Column(db.String(256), nullable=False, unique=True)
+    user_id = db.Column(db.String(128), nullable=False, unique=True)
     pw_hash = db.Column(db.String(256), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
 
 
 class Books(db.Model):
