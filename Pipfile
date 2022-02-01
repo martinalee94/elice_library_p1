@@ -37,6 +37,11 @@ flake8 = "*"
 black = "*"
 isort = "*"
 cryptography = "*"
+gunicorn = "*"
+pytest = "*"
+faker = "*"
+flask-admin = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
