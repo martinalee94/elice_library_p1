@@ -53,15 +53,15 @@ class Books(db.Model):
         self.rating = rating
 
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
-    book_name = db.Column(db.String(256), nullable=False)
-    publisher = db.Column(db.String(256), nullable=False)
+    book_name = db.Column(db.String(128), nullable=False)
+    publisher = db.Column(db.String(128), nullable=False)
     author = db.Column(db.String(100), nullable=False)
     publication_date = db.Column(db.String(10), nullable=False)
     pages = db.Column(db.Integer, nullable=False)
     isbn = db.Column(db.String(13), unique=True, nullable=False)
     description = db.Column(db.Text(), nullable=False)
-    link = db.Column(db.String(500), nullable=False)
-    image = db.Column(db.String(500), nullable=False, unique=True)
+    link = db.Column(db.String(128), nullable=False)
+    image = db.Column(db.String(128), nullable=False, unique=True)
     stock = db.Column(db.Integer, nullable=False, default=1)
     rating = db.Column(db.Float, nullable=False)
 
