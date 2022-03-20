@@ -1,6 +1,8 @@
 # 엘리스 도서관 대출 서비스
 Flask, MySQL, Bootstrap을 이용해 도서관 책 대여 웹서비스를 구현했습니다.(개인프로젝트) <br>
 서버사이드 렌더링 방식이며, Flask ORM을 이용하여 데이터베이스를 이용했습니다.
+<img src="https://user-images.githubusercontent.com/39133877/159165403-63d9acc9-f4db-4935-8954-44a83ee883fc.png" alt="main" width="600px"></img>
+
 
 
 
